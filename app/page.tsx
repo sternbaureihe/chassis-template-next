@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+export const dynamic = 'force-dynamic';
+
 
 const chassisCode = process.env.CHASSIS_CODE || 'W124';
 const chassisName = process.env.CHASSIS_NAME || 'Mercedes-Benz W124';
