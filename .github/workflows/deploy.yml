@@ -1,0 +1,44 @@
+name: Deploy to Web Server
+
+on:
+  push:
+    branches: [main]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: sternbaureihe/chassis-template-next
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u audacities-advertising --password-stdin
+
+      - name: Set image tag
+        run: echo "IMAGE_URL=ghcr.io/${{ env.IMAGE_NAME }}:$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ env.IMAGE_URL }}
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          cat >> ~/.ssh/config << 'SSHEOF'
+          Host web-server
+            HostName ${{ secrets.DEPLOY_HOST }}
+            User root
+            IdentityFile ~/.ssh/deploy_key
+            StrictHostKeyChecking no
+          SSHEOF
+
+      - name: Deploy all 93 chassis containers
+        run: ssh web-server "bash /opt/sternbaureihe/deploy.sh ${{ env.IMAGE_URL }}"
