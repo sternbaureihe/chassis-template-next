@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+export const dynamic = 'force-dynamic';
+
 
 const chassisCode = process.env.CHASSIS_CODE || 'W124';
 const productionYears = process.env.PRODUCTION_YEARS || '1984–1997';
