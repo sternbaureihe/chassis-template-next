@@ -1,0 +1,7 @@
+# SternBaureihe Network - Audacities Media & Advertising LLC
+# Publisher: audacities-media-advertising
+# ads.txt managed at github.com/sternbaureihe/chassis-template-next
+# SSP entries added as publisher IDs are approved
+
+contact=publisher@audacitiesmedia.com
+contact=https://audacitiesmedia.com/ads.txt-contact

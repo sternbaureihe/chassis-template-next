@@ -1,0 +1,14 @@
+{
+  "contact_email": "publisher@audacitiesmedia.com",
+  "contact_address": "3535 Executive Terminal Dr, Henderson NV 89052",
+  "version": "1.0",
+  "sellers": [
+    {
+      "seller_id": "audacities-media-advertising",
+      "name": "Audacities Media & Advertising LLC",
+      "domain": "sternbaureihe.com",
+      "seller_type": "PUBLISHER",
+      "is_confidential": 0
+    }
+  ]
+}
