@@ -4,15 +4,8 @@ import { useEffect, useRef } from 'react';
 interface AdSlotProps {
   slotId: string;
   adUnitPath: string;
-  sizes: googletag.GeneralSize;
+  sizes: [number, number][];
   lazy?: boolean;
-}
-
-declare global {
-  interface Window {
-    googletag: googletag.Googletag;
-    pbjs: any;
-  }
 }
 
 export default function AdSlot({ slotId, adUnitPath, sizes, lazy = false }: AdSlotProps) {
@@ -24,13 +17,15 @@ export default function AdSlot({ slotId, adUnitPath, sizes, lazy = false }: AdSl
     defined.current = true;
 
     const define = () => {
-      window.googletag = window.googletag || { cmd: [] };
-      window.googletag.cmd.push(() => {
-        window.googletag.defineSlot(adUnitPath, sizes, slotId)
-          ?.addService(window.googletag.pubads());
-        window.googletag.pubads().enableSingleRequest();
-        window.googletag.enableServices();
-        window.googletag.display(slotId);
+      const gtag = (window as any).googletag;
+      if (!gtag) return;
+      gtag.cmd = gtag.cmd || [];
+      gtag.cmd.push(() => {
+        gtag.defineSlot(adUnitPath, sizes, slotId)
+          ?.addService(gtag.pubads());
+        gtag.pubads().enableSingleRequest();
+        gtag.enableServices();
+        gtag.display(slotId);
       });
     };
 
@@ -53,11 +48,22 @@ export default function AdSlot({ slotId, adUnitPath, sizes, lazy = false }: AdSl
     return () => observer.disconnect();
   }, [slotId, adUnitPath, sizes, lazy]);
 
+  const minHeight = sizes[0] ? sizes[0][1] : 90;
+
   return (
     <div
       ref={ref}
       id={slotId}
-      style={{ minHeight: Array.isArray(sizes[0]) ? (sizes[0] as number[])[1] : 90, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#161616', border: '0.5px solid #2a2a2a', borderRadius: '4px', margin: '0 0 16px 0' }}
+      style={{
+        minHeight,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#161616',
+        border: '0.5px solid #2a2a2a',
+        borderRadius: '4px',
+        margin: '0 0 16px 0'
+      }}
     />
   );
 }
