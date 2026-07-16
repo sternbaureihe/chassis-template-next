@@ -13,17 +13,21 @@ export default function AdManager({ networkCode, chassisCode, floorAtf = 2.00, f
   useEffect(() => {
     if (!networkCode || networkCode === 'PLACEHOLDER') return;
 
-    window.googletag = window.googletag || { cmd: [] };
-    window.pbjs = window.pbjs || { que: [] };
+    const w = window as any;
+    w.googletag = w.googletag || { cmd: [] };
+    w.pbjs = w.pbjs || { que: [] };
 
-    const pbjs = window.pbjs;
+    const pbjs = w.pbjs;
 
     pbjs.que.push(() => {
       pbjs.setConfig({
         priceGranularity: 'medium',
         bidderTimeout: 1500,
         enableSendAllBids: false,
-        userSync: { syncEnabled: true, filterSettings: { all: { bidders: '*', filter: 'include' } } },
+        userSync: {
+          syncEnabled: true,
+          filterSettings: { all: { bidders: '*', filter: 'include' } }
+        },
         currency: { adServerCurrency: 'USD' },
         floors: {
           enforcement: { floorDeals: true },
@@ -31,10 +35,10 @@ export default function AdManager({ networkCode, chassisCode, floorAtf = 2.00, f
             currency: 'USD',
             schema: { fields: ['gptSlot'] },
             values: {
-              [`/${networkCode}/SternBaureihe/${chassisCode}/atf_leaderboard`]: floorAtf,
-              [`/${networkCode}/SternBaureihe/${chassisCode}/content_rectangle_1`]: floorMr,
-              [`/${networkCode}/SternBaureihe/${chassisCode}/content_rectangle_2`]: floorMr,
-              [`/${networkCode}/SternBaureihe/${chassisCode}/btf_skyscraper`]: floorBtf,
+              ['/' + networkCode + '/SternBaureihe/' + chassisCode + '/atf_leaderboard']: floorAtf,
+              ['/' + networkCode + '/SternBaureihe/' + chassisCode + '/content_rectangle_1']: floorMr,
+              ['/' + networkCode + '/SternBaureihe/' + chassisCode + '/content_rectangle_2']: floorMr,
+              ['/' + networkCode + '/SternBaureihe/' + chassisCode + '/btf_skyscraper']: floorBtf,
             }
           }
         }
@@ -42,11 +46,11 @@ export default function AdManager({ networkCode, chassisCode, floorAtf = 2.00, f
 
       pbjs.addAdUnits([
         {
-          code: `sb-${chassisCode}-atf`,
+          code: 'sb-' + chassisCode + '-atf',
           mediaTypes: { banner: { sizes: [[728, 90], [320, 50]] } },
           bids: [
             { bidder: 'criteo', params: { networkId: 0 } },
-            { bidder: 'pubmatic', params: { publisherId: '0', adSlot: `SternBaureihe_ATF` } },
+            { bidder: 'pubmatic', params: { publisherId: '0', adSlot: 'SternBaureihe_ATF' } },
             { bidder: 'openx', params: { unit: '0', delDomain: 'sternbaureihe-d.openx.net' } },
             { bidder: 'ix', params: { siteId: '0', size: [728, 90] } },
             { bidder: 'triplelift', params: { inventoryCode: 'SternBaureihe_ATF' } },
@@ -55,7 +59,7 @@ export default function AdManager({ networkCode, chassisCode, floorAtf = 2.00, f
           ]
         },
         {
-          code: `sb-${chassisCode}-mr1`,
+          code: 'sb-' + chassisCode + '-mr1',
           mediaTypes: { banner: { sizes: [[300, 250]] } },
           bids: [
             { bidder: 'criteo', params: { networkId: 0 } },
@@ -68,7 +72,7 @@ export default function AdManager({ networkCode, chassisCode, floorAtf = 2.00, f
           ]
         },
         {
-          code: `sb-${chassisCode}-mr2`,
+          code: 'sb-' + chassisCode + '-mr2',
           mediaTypes: { banner: { sizes: [[300, 250]] } },
           bids: [
             { bidder: 'criteo', params: { networkId: 0 } },
@@ -81,7 +85,7 @@ export default function AdManager({ networkCode, chassisCode, floorAtf = 2.00, f
           ]
         },
         {
-          code: `sb-${chassisCode}-btf`,
+          code: 'sb-' + chassisCode + '-btf',
           mediaTypes: { banner: { sizes: [[160, 600], [300, 250]] } },
           bids: [
             { bidder: 'criteo', params: { networkId: 0 } },
@@ -95,11 +99,11 @@ export default function AdManager({ networkCode, chassisCode, floorAtf = 2.00, f
         }
       ]);
 
-      window.googletag.cmd.push(() => {
-        window.googletag.pubads().setTargeting('chassis', chassisCode);
-        window.googletag.pubads().setTargeting('iab_cat', ['IAB2', 'IAB2-1']);
-        window.googletag.pubads().setTargeting('content_type', 'editorial');
-        window.googletag.pubads().setTargeting('brand_safety', 'automotive_enthusiast');
+      w.googletag.cmd.push(() => {
+        w.googletag.pubads().setTargeting('chassis', chassisCode);
+        w.googletag.pubads().setTargeting('iab_cat', ['IAB2', 'IAB2-1']);
+        w.googletag.pubads().setTargeting('content_type', 'editorial');
+        w.googletag.pubads().setTargeting('brand_safety', 'automotive_enthusiast');
       });
     });
   }, [networkCode, chassisCode, floorAtf, floorMr, floorBtf]);
