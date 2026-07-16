@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
+import AdSlot from '../components/AdSlot';
 export const dynamic = 'force-dynamic';
-
 
 const chassisCode = process.env.CHASSIS_CODE || 'W124';
 const chassisName = process.env.CHASSIS_NAME || 'Mercedes-Benz W124';
@@ -11,21 +11,14 @@ const collectorIndex = process.env.COLLECTOR_INDEX || '9.2';
 const heroTitle = process.env.HERO_TITLE || 'Built to Last Forever';
 const heroSubtitle = process.env.HERO_SUBTITLE || 'The E-Class that defined a generation. Overengineered to Mercedes-Benz standards that no longer exist, the W124 remains the benchmark against which every Mercedes is measured.';
 const overviewText = process.env.OVERVIEW_TEXT || 'The W124 was Mercedes-Benz at its most committed. Introduced in 1984 as the successor to the W123, it arrived over-engineered by any commercial standard.';
-const collectorText = process.env.COLLECTOR_TEXT || 'The W124 market has strengthened consistently since 2018. Estate variants command a 25–40% premium over equivalent sedans in comparable condition.';
+const collectorText = process.env.COLLECTOR_TEXT || 'The W124 market has strengthened consistently since 2018. Estate variants command a 25-40% premium over equivalent sedans in comparable condition.';
 const specEngine = process.env.SPEC_ENGINE || '2.0L – 5.0L';
 const specBody = process.env.SPEC_BODY || 'Sedan, Estate, Coupe, Cabriolet';
 const specTopVariant = process.env.SPEC_TOP_VARIANT || 'E 500 (W124.036)';
 const specTransmission = process.env.SPEC_TRANSMISSION || '4-speed auto / 5-speed manual';
 const specSuccessor = process.env.SPEC_SUCCESSOR || 'W210';
 const specPlatform = process.env.SPEC_PLATFORM || chassisCode;
-const ad1Name = process.env.AD1_NAME || 'Your Shop Here';
-const ad1Desc = process.env.AD1_DESC || 'Reach verified Mercedes-Benz enthusiasts in your market. Geo-targeted advertising starting at $299/month.';
-const ad1Cta = process.env.AD1_CTA || 'Advertise with us';
-const ad1Url = process.env.AD1_URL || 'https://sternbaureihe.com/advertise/';
-const ad2Name = process.env.AD2_NAME || 'FCP Euro';
-const ad2Desc = process.env.AD2_DESC || 'OEM and OE-equivalent parts with lifetime replacement guarantee.';
-const ad2Cta = process.env.AD2_CTA || 'Shop parts';
-const ad2Url = process.env.AD2_URL || 'https://www.fcpeuro.com';
+const gamNetworkCode = process.env.GAM_NETWORK_CODE || 'PLACEHOLDER';
 
 const siteUrl = process.env.SITE_URL || 'https://mb-w124.com';
 
@@ -38,15 +31,11 @@ export const metadata: Metadata = {
   alternates: { canonical: siteUrl },
   openGraph: { url: siteUrl, title: `${chassisName} (${chassisCode}) — The Definitive Resource | SternBaureihe` },
   twitter: { title: `${chassisName} (${chassisCode}) — The Definitive Resource | SternBaureihe` },
-  other: {
-    'ld+json': JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'Product',
-      name: chassisName,
-      description: `Mercedes-Benz ${chassisCode}, produced ${productionYears}`,
-    }),
-  },
 };
+
+const adUnitBase = gamNetworkCode !== 'PLACEHOLDER'
+  ? `/${gamNetworkCode}/SternBaureihe/${chassisCode}`
+  : null;
 
 export default function HomePage() {
   return (
@@ -73,12 +62,7 @@ export default function HomePage() {
         .spec-item { background:#1a1a1a; padding:12px 16px; }
         .spec-key { font-family:'JetBrains Mono',monospace; font-size:12px; color:#444; letter-spacing:0.07em; text-transform:uppercase; margin-bottom:4px; }
         .spec-val { font-family:'JetBrains Mono',monospace; font-size:14px; color:#c8c5bd; font-weight:500; }
-        .ad-slot { background:#161616; border:0.5px solid #2a2a2a; border-radius:4px; padding:18px; margin-bottom:16px; }
-        .ad-label { font-family:'JetBrains Mono',monospace; font-size:12px; color:#333; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:10px; }
-        .ad-name { font-size:15px; color:#c8c5bd; font-weight:500; margin-bottom:6px; }
-        .ad-desc { font-size:14px; color:#666; line-height:1.5; margin-bottom:12px; }
-        .ad-cta { font-family:'JetBrains Mono',monospace; font-size:12px; color:#1A2744; border:0.5px solid #1A2744; padding:6px 12px; border-radius:3px; display:inline-block; transition:all 0.2s; }
-        .ad-cta:hover { background:#1A2744; color:#e8e6e1; }
+        .ad-slot-wrapper { background:#161616; border:0.5px solid #2a2a2a; border-radius:4px; margin-bottom:16px; overflow:hidden; }
         .related { background:#161616; border:0.5px solid #2a2a2a; border-radius:4px; padding:16px; margin-bottom:16px; }
         .related-title { font-family:'JetBrains Mono',monospace; font-size:12px; color:#444; letter-spacing:0.09em; text-transform:uppercase; margin-bottom:12px; }
         .related-item { font-size:14px; color:#777; padding:6px 0; border-bottom:0.5px solid #1e1e1e; display:flex; justify-content:space-between; }
@@ -149,6 +133,17 @@ export default function HomePage() {
             <div className="section-label">Chassis overview</div>
             <p className="body-text">{overviewText}</p>
 
+            {adUnitBase && (
+              <div className="ad-slot-wrapper">
+                <AdSlot
+                  slotId={`sb-${chassisCode}-mr1`}
+                  adUnitPath={`${adUnitBase}/content_rectangle_1`}
+                  sizes={[[300, 250]]}
+                  lazy={true}
+                />
+              </div>
+            )}
+
             <div className="section-label">Key specifications</div>
             <div className="specs-grid">
               <div className="spec-item"><div className="spec-key">Platform</div><div className="spec-val">{specPlatform}</div></div>
@@ -162,6 +157,17 @@ export default function HomePage() {
             <div className="section-label">Collector notes</div>
             <p className="body-text">{collectorText}</p>
 
+            {adUnitBase && (
+              <div className="ad-slot-wrapper">
+                <AdSlot
+                  slotId={`sb-${chassisCode}-mr2`}
+                  adUnitPath={`${adUnitBase}/content_rectangle_2`}
+                  sizes={[[300, 250]]}
+                  lazy={true}
+                />
+              </div>
+            )}
+
             <div className="cta-strip">
               <a href="/guides" className="cta-btn cta-primary">Buyer&apos;s Guide →</a>
               <a href="/specs" className="cta-btn cta-secondary">Full Specifications</a>
@@ -171,21 +177,23 @@ export default function HomePage() {
           </div>
 
           <div className="body-aside">
-            <div className="section-label">Specialist services</div>
+            <div className="section-label">Advertising</div>
 
-            <div className="ad-slot">
-              <div className="ad-label">Featured specialist</div>
-              <div className="ad-name">{ad1Name}</div>
-              <p className="ad-desc">{ad1Desc}</p>
-              <a href={ad1Url} className="ad-cta">{ad1Cta} →</a>
-            </div>
-
-            <div className="ad-slot">
-              <div className="ad-label">Parts supplier</div>
-              <div className="ad-name">{ad2Name}</div>
-              <p className="ad-desc">{ad2Desc}</p>
-              <a href={ad2Url} className="ad-cta">{ad2Cta} →</a>
-            </div>
+            {adUnitBase ? (
+              <div className="ad-slot-wrapper">
+                <AdSlot
+                  slotId={`sb-${chassisCode}-atf`}
+                  adUnitPath={`${adUnitBase}/atf_leaderboard`}
+                  sizes={[[728, 90], [320, 50]]}
+                  lazy={false}
+                />
+              </div>
+            ) : (
+              <div style={{ background: '#161616', border: '0.5px solid #2a2a2a', borderRadius: '4px', padding: '18px', marginBottom: '16px' }}>
+                <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: '12px', color: '#333', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '8px' }}>Advertisement</div>
+                <div style={{ fontSize: '13px', color: '#555' }}>Ad inventory coming soon</div>
+              </div>
+            )}
 
             {relatedChassis.length > 0 && (
               <div className="related">
@@ -196,6 +204,17 @@ export default function HomePage() {
                     <span>{c.years}</span>
                   </div>
                 ))}
+              </div>
+            )}
+
+            {adUnitBase && (
+              <div className="ad-slot-wrapper">
+                <AdSlot
+                  slotId={`sb-${chassisCode}-btf`}
+                  adUnitPath={`${adUnitBase}/btf_skyscraper`}
+                  sizes={[[160, 600], [300, 250]]}
+                  lazy={true}
+                />
               </div>
             )}
 
