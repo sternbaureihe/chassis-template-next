@@ -56,7 +56,8 @@ export default function Footer({ chassisCode, siteUrl }: FooterProps) {
           <div className="footer-bottom-right">
             <a href="https://sternbaureihe.com/advertise/">Advertise</a>
             <a href="https://sternbaureihe.com/about/">About</a>
-            <a href="https://sternbaureihe.com/privacy/">Privacy</a>
+            <a href="/privacy">Privacy</a>
+            <a href="/terms">Terms</a>
           </div>
         </div>
       </footer>
